@@ -1,0 +1,28 @@
+{% extends 'partials/base.html' %}
+{% load l10n %}
+
+{% block header %}
+    Sessions
+{% endblock %}
+{% block sidebar %}
+    <a class="btn btn-primary" href="{%  url 'items:create' %}">Create new</a>
+{% endblock %}
+
+{% block content %}
+    {% for session in sessions %}
+        <div class="card">
+            <div class="card-header">
+                {{ session }}
+            </div>
+            <div class="card-body">
+                {{ session.locations_as_table }}
+                <a class="btn btn-primary" href="{% url 'items:view' session.pk %}">View</a>
+                {% if session.note %}
+                <h5 class="card-title">Notes:</h5>
+                    {{ session.note }}
+                {% endif %}
+            </div>
+        </div>
+        <br>
+    {% endfor %}
+{% endblock %}

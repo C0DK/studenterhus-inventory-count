@@ -1,5 +1,5 @@
 """
-WSGI config for studenterhus_inventory_count project.
+WSGI config for studenthouse_admin project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "studenterhus_inventory_count.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "studenthouse_admin.settings")
 
 application = get_wsgi_application()

@@ -1,0 +1,56 @@
+{% extends 'partials/base.html' %}
+{% load l10n %}
+
+{% block header %}
+    Sessions
+{% endblock %}
+{% block sidebar %}
+    <a href="{% url 'items:list' %}" class="btn btn-primary">Go Back</a>
+    {% if session.previous %}
+        <a class="btn btn-primary" href="{% url 'items:view' session.previous.pk %}">Previous</a>
+    {% endif %}
+    {% if session.next %}
+        <a class="btn btn-primary" href="{% url 'items:view' session.next.pk %}">Next</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            {{ session }}
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs">
+                <li class="nav-item show">
+                    <a class="nav-link" data-toggle="tab" href="#home">Inventory</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#menu1">Changes</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade show active">
+                    {{ session.locations_as_table }}
+                </div>
+                <div id="menu1" class="tab-pane fade">
+<small class="text-muted">
+    {% if session.previous %}
+    Compared to the previous at {{ session.previous.start_time }}
+    {% else %}
+        Compared to 'start'
+    {% endif %}
+</small>
+                    {{ session.changes_as_table }}
+                </div>
+            </div>
+
+            <form method="post">
+                {{ notes_form.as_p }}
+                <input type="submit" value="Submit">
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

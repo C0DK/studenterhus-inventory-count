@@ -1,0 +1,19 @@
+{% extends 'partials/base.html' %}
+{% load l10n %}
+
+{% block header %}
+    Session: {% if form.instance %}{{ form.instance.start_time }}{% else %}New{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+    <a href="{% url 'items:list' %}" class="btn btn-primary">Go Back</a>
+{% endblock %}
+
+{% block content %}
+
+    <form method="post">
+        {{ form.as_table }}
+        <input type="submit" value="Submit">
+        {% csrf_token %}
+    </form>
+{% endblock %}

@@ -1,25 +1,39 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 
-# Create your views here.
-from items.forms import ItemRecordForm
-from items.models import ItemType, LOCATIONS
-
-
-def location_from_id(location):
-    return LOCATIONS[location][1]
+from items.forms import SessionItemsForm, SessionNoteForm
+from items.models import Session
 
 
-def create_new_session(request):
-    forms = [{
-        "form": ItemRecordForm(prefix=it.pk),
-        "location": location_from_id(idx),
-        "type": it
+def create_session(request, session_pk=None):
+    form = SessionItemsForm(
+        request.POST or None,
+        instance=Session.objects.filter(pk=session_pk).first() or None,
+        reporter=request.user
+    )
+    if request.POST and form.is_valid():
+        session = form.save()
+
+        return redirect("items:view", session.pk)
+    context = {
+        "form": form
     }
-        for it in ItemType.objects.all() for idx, loc in enumerate(it.locations) if loc == "1"]
 
-    return render(request, "form_new_session.html", {
-        "forms": forms
+    return render(request, 'items/form.html', context)
+
+
+def view_session(request, session_pk):
+    session = get_object_or_404(Session, pk=session_pk)
+    notes_form = SessionNoteForm(request.POST or None, instance=session)
+    if request.POST and notes_form.is_valid():
+        notes_form.save()
+
+    return render(request, "items/view.html", {
+        "session": session,
+        "notes_form": notes_form
     })
 
-def view_history(request):
-    pass
+
+def list_sessions(request):
+    return render(request, "items/list.html", {
+        'sessions': Session.objects.all().order_by("-start_time"),
+    })

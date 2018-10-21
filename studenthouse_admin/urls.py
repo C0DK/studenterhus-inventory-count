@@ -1,4 +1,4 @@
-"""studenterhus_inventory_count URL Configuration
+"""studenthouse_admin URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -16,9 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from items.views import create_new_session
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('items/', create_new_session),
+    path('items/', include('items.urls')),
 ]
